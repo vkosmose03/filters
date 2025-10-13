@@ -12,9 +12,10 @@
 #include "filterTypes.h"
 #include "signalContainer.h"
 
+
+
 namespace filters
 {
-
 /**
  * @brief A class for applying Haar wavelet transforms to signals.
  *        This filter can clear signal from noise: if u know noise level use hard thresholding,
@@ -37,8 +38,12 @@ class filterHAAR
 private:
     HAARthreshold thresholdType_;
     double thresholdValue_;
-    signalContainer<T> signalData_;
+    signalContainer<T> originSignal_;
+    signalContainer<T> filteredSignal_;
     int filteringwindow_;
+    void HAARdeconstruction(std::vector<double>& coeffs);
+    void HAARreconstruction(const std::vector<double>& coeffs);
+    T thresholding(T value, T threshold);
 public:
     filterHAAR(const std::vector<T>& signal, HAARthreshold thresholdType, double thresholdValue = 0.0, int filteringwindow = 0);
     ~filterHAAR();
@@ -64,9 +69,10 @@ class filterMAF
 {
 private:
     int windowSize_;
-    signalContainer<T> signalData_;
+    signalContainer<T> originSignal_;
+    signalContainer<T> filteredSignal_;
 public:
-    filterMAF(const std::vector<T>& signal, int windowSize); 
+    filterMAF(const std::vector<T>& signal, int windowSize);
     ~filterMAF();
     void applyFilter();
     std::vector<T> getFilteredSignal() const;
@@ -100,7 +106,8 @@ class filterEMF
 {
 private:
     int windowSize_;
-    signalContainer<T> signalData_;
+    signalContainer<T> originSignal_;
+    signalContainer<T> filteredSignal_;
     EMFenvironment signalType_;
     double k;
     double std_k_, max_k_;
@@ -112,6 +119,7 @@ public:
     void applyFilter();
     std::vector<T> getFilteredSignal() const;
 };
+
 
 
 /**
@@ -129,12 +137,12 @@ class filterMedian
 {
 private:
     int windowSize_;
-    signalContainer<T> signalData_;
+    signalContainer<T> originSignal_;
+    signalContainer<T> filteredSignal_;
 public:
     filterMedian(const std::vector<T>& signal, int windowSize);
     ~filterMedian();
     void applyFilter();
     std::vector<T> getFilteredSignal() const;
 };
-
-}
+} // namespace filters
