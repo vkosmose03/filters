@@ -107,36 +107,12 @@ int main(int argc, char* argv[])
 
         outputFile << "$GYRACC";
 
-        Med.setSignal(aXV);
-        Med.applyFilter();
-        std::vector<double> buffer = Med.getFilteredSignal();
-        if (!buffer.empty()) {
-            outputFile << "," << buffer.back();
-        } else {
-            outputFile << ",0";
-        }
-
-        Med.setSignal(aYV);
-        Med.applyFilter();
-        buffer = Med.getFilteredSignal();
-        if (!buffer.empty()) {
-            outputFile << "," << buffer.back();
-        } else {
-            outputFile << ",0";
-        }
-
-        Med.setSignal(aZV);
-        Med.applyFilter();
-        buffer = Med.getFilteredSignal();
-        if (!buffer.empty()) {
-            outputFile << "," << buffer.back();
-        } else {
-            outputFile << ",0";
-        }
-
         Med.setSignal(wXV);
         Med.applyFilter();
-        buffer = Med.getFilteredSignal();
+        std::vector<double> buffer = Med.getFilteredSignal();
+        // EMF.setSignal(buffer);
+        // EMF.applyFilter();
+        // buffer = EMF.getFilteredSignal();
         if (!buffer.empty()) {
             outputFile << "," << buffer.back();
         } else {
@@ -146,6 +122,9 @@ int main(int argc, char* argv[])
         Med.setSignal(wYV);
         Med.applyFilter();
         buffer = Med.getFilteredSignal();
+        // EMF.setSignal(buffer);
+        // EMF.applyFilter();
+        // buffer = EMF.getFilteredSignal();
         if (!buffer.empty()) {
             outputFile << "," << buffer.back();
         } else {
@@ -155,6 +134,45 @@ int main(int argc, char* argv[])
         Med.setSignal(wZV);
         Med.applyFilter();
         buffer = Med.getFilteredSignal();
+        // EMF.setSignal(buffer);
+        // EMF.applyFilter();
+        // buffer = EMF.getFilteredSignal();
+        if (!buffer.empty()) {
+            outputFile << "," << buffer.back();
+        } else {
+            outputFile << ",0";
+        }
+
+        Med.setSignal(aXV);
+        Med.applyFilter();
+        buffer = Med.getFilteredSignal();
+        // EMF.setSignal(buffer);
+        // EMF.applyFilter();
+        // buffer = EMF.getFilteredSignal();
+        if (!buffer.empty()) {
+            outputFile << "," << buffer.back();
+        } else {
+            outputFile << ",0";
+        }
+
+        Med.setSignal(aYV);
+        Med.applyFilter();
+        buffer = Med.getFilteredSignal();
+        // EMF.setSignal(buffer);
+        // EMF.applyFilter();
+        // buffer = EMF.getFilteredSignal();
+        if (!buffer.empty()) {
+            outputFile << "," << buffer.back();
+        } else {
+            outputFile << ",0";
+        }
+
+        Med.setSignal(aZV);
+        Med.applyFilter();
+        buffer = Med.getFilteredSignal();
+        // EMF.setSignal(buffer);
+        // EMF.applyFilter();
+        // buffer = EMF.getFilteredSignal();
         if (!buffer.empty()) {
             outputFile << "," << buffer.back();
         } else {
