@@ -61,7 +61,7 @@ public:
 
     void applyFilter();
 
-    signalContainer<T>& getOriginSignalContainerReference();
+    signalContainer<T>& getOriginalSignalContainerReference();
     signalContainer<T>& getFilteredSignalContainerReference();
 };
 
@@ -169,7 +169,7 @@ void filterEMF<T>::applyFilter()
  * @return A reference to the original signal container.
  */
 template <typename T>
-signalContainer<T>& getOriginSignalContainerReference()
+signalContainer<T>& filterEMF<T>::getOriginalSignalContainerReference()
 {
     return this->originSignal_;
 }
@@ -181,7 +181,7 @@ signalContainer<T>& getOriginSignalContainerReference()
  * @return A reference to the filtered signal container.
  */
 template <typename T>
-signalContainer<T>& getFilteredSignalContainerReference()
+signalContainer<T>& filterEMF<T>::getFilteredSignalContainerReference()
 {
     return this->filteredSignal_;
 }

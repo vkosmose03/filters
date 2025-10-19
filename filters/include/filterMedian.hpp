@@ -45,7 +45,7 @@ public:
 
     void applyFilter();
 
-    signalContainer<T>& getOriginSignalContainerReference();
+    signalContainer<T>& getOriginalSignalContainerReference();
     signalContainer<T>& getFilteredSignalContainerReference();
 };
 
@@ -92,7 +92,7 @@ filterMedian<T>::~filterMedian()
  * @return A reference to the original signal container.
  */
 template <typename T>
-signalContainer<T>& filterMedian<T>::getOriginSignalContainerReference()
+signalContainer<T>& filterMedian<T>::getOriginalSignalContainerReference()
 {
     return this->originSignal_;
 }

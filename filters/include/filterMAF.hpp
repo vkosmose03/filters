@@ -45,7 +45,7 @@ public:
 
     void applyFilter();
 
-    signalContainer<T>& getOriginSignalContainerReference();
+    signalContainer<T>& getOriginalSignalContainerReference();
     signalContainer<T>& getFilteredSignalContainerReference();
 };
 
@@ -129,7 +129,7 @@ void filterMAF<T>::applyFilter()
  * @return A reference to the original signal container.
  */
 template <typename T>
-signalContainer<T>& filterMAF<T>::getOriginSignalContainerReference()
+signalContainer<T>& filterMAF<T>::getOriginalSignalContainerReference()
 {
     return this->originSignal_;
 }

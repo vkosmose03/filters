@@ -48,17 +48,17 @@ private:
     int filteringWindow_;
     int depth_;
 
-    void HAARdeconstruction(const std::vector<T>& signal, std::vector<double>& coeffs, int level);
+    void HAARdeconstruction(const std::vector<T>& signal, std::vector<double>& coeffs, int depth);
     void HAARreconstruction(std::vector<T>& signal, const std::vector<double>& coeffs);
     T thresholding(T value);
 public:
-    filterHAAR(signalContainer<T> signal, HAARthreshold thresholdType, double thresholdValue = 0.0, int filteringWindow = 0);
-    filterHAAR(HAARthreshold thresholdType, double thresholdValue = 0.0, int filteringWindow = 0);
+    filterHAAR(signalContainer<T> signal, HAARthreshold thresholdType, double thresholdValue = 0.0, int filteringWindow = 0, int depth = 1);
+    filterHAAR(HAARthreshold thresholdType, double thresholdValue = 0.0, int filteringWindow = 0, int depth = 0);
     ~filterHAAR();
 
     void applyFilter();
 
-    signalContainer<T>& getOriginSignalContainerReference();
+    signalContainer<T>& getOriginalSignalContainerReference();
     signalContainer<T>& getFilteredSignalContainerReference();
 };
 
@@ -72,11 +72,12 @@ public:
  * @param filteringWindow The size of the filtering window.
  */
 template <typename T>
-filterHAAR<T>::filterHAAR(signalContainer<T> signal, HAARthreshold thresholdType, double thresholdValue, int filteringWindow)
+filterHAAR<T>::filterHAAR(signalContainer<T> signal, HAARthreshold thresholdType, double thresholdValue, int filteringWindow, int depth)
 : originSignal_(signal)
 , thresholdType_(thresholdType)
 , thresholdValue_(thresholdValue)
 , filteringWindow_(filteringWindow)
+, depth_(depth)
 {
 }
 
@@ -88,10 +89,11 @@ filterHAAR<T>::filterHAAR(signalContainer<T> signal, HAARthreshold thresholdType
  * @param filteringWindow The size of the filtering window.
  */
 template <typename T>
-filterHAAR<T>::filterHAAR(HAARthreshold thresholdType, double thresholdValue, int filteringWindow)
+filterHAAR<T>::filterHAAR(HAARthreshold thresholdType, double thresholdValue, int filteringWindow, int depth)
 : thresholdType_(thresholdType)
 , thresholdValue_(thresholdValue)
 , filteringWindow_(filteringWindow)
+, depth_(depth)
 {
 }
 
@@ -137,13 +139,13 @@ T filterHAAR<T>::thresholding(T value)
  * @param coeffs The output coefficients after deconstruction.
  */
 template <typename T>
-void filterHAAR<T>::HAARdeconstruction(const std::vector<T>& signal, std::vector<double>& coeffs, int level)
+void filterHAAR<T>::HAARdeconstruction(const std::vector<T>& signal, std::vector<double>& coeffs, int depth)
 {
     size_t n = signal.size();
     if (n < 2)
         return;
     
-    size_t half = (n / std::pow(2.0, level));
+    size_t half = (n / std::pow(2.0, depth));
 
     for (size_t i = 0; i < half; ++i)
     {
@@ -251,7 +253,7 @@ void filterHAAR<T>::applyFilter()
  * @return A reference to the original signal container.
  */
 template <typename T>
-signalContainer<T>& filterHAAR<T>::getOriginSignalContainerReference()
+signalContainer<T>& filterHAAR<T>::getOriginalSignalContainerReference()
 {
     return this->originSignal_;
 }

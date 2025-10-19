@@ -8,8 +8,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Add include directories
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/filters/include)
 
-# Create example executable - добавляем только example.cpp
-# Остальные файлы не нужны, так как их реализация в заголовках
 add_executable(example
     example/example.cpp
 )

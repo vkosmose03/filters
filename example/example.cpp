@@ -40,12 +40,15 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    filters::filterEMF<double> EMF(filters::EMFenvironment::PHYSICALS, 0.2, 0.0, 0.0, 0.0);
-    filters::filterMedian<double> Med(16);
+    std::unique_ptr<filters::filterBase<double>> EMFPtr = std::make_unique<filters::filterEMF<double>>(filters::EMFenvironment::PHYSICALS, 0.2, 0.0, 0.0, 0.0);
+    std::unique_ptr<filters::filterBase<double>> MedPtr = std::make_unique<filters::filterMedian<double>>(16);
+    filters::filterChain<double> filterChainObj;
+    filterChainObj.appendFilter(MedPtr);
+    filterChainObj.appendFilter(EMFPtr);
     std::vector<double> aXV, aYV, aZV, wXV, wYV, wZV;
     
     // ИСПРАВЛЕНО: правильное открытие файла для записи
-    std::ofstream outputFile("output.txt", std::ios::out);
+    std::ofstream outputFile("output.log", std::ios::out);
     if (!outputFile.is_open()) {
         std::cerr << "Error: Cannot open output.txt for writing!" << std::endl;
         return 1;
@@ -107,9 +110,9 @@ int main(int argc, char* argv[])
 
         outputFile << "$GYRACC";
 
-        Med.setSignal(wXV);
-        Med.applyFilter();
-        std::vector<double> buffer = Med.getFilteredSignal();
+        filterChainObj.getOriginalSignalReference().setSignal(wXV);
+        filterChainObj.applyFilters();
+        std::vector<double> buffer = filterChainObj.getFilteredSignalReference().getSignal();
         // EMF.setSignal(buffer);
         // EMF.applyFilter();
         // buffer = EMF.getFilteredSignal();
@@ -119,9 +122,9 @@ int main(int argc, char* argv[])
             outputFile << ",0";
         }
 
-        Med.setSignal(wYV);
-        Med.applyFilter();
-        buffer = Med.getFilteredSignal();
+        filterChainObj.getOriginalSignalReference().setSignal(wYV);
+        filterChainObj.applyFilters();
+        buffer = filterChainObj.getFilteredSignalReference().getSignal();
         // EMF.setSignal(buffer);
         // EMF.applyFilter();
         // buffer = EMF.getFilteredSignal();
@@ -131,9 +134,9 @@ int main(int argc, char* argv[])
             outputFile << ",0";
         }
 
-        Med.setSignal(wZV);
-        Med.applyFilter();
-        buffer = Med.getFilteredSignal();
+        filterChainObj.getOriginalSignalReference().setSignal(wZV);
+        filterChainObj.applyFilters();
+        buffer = filterChainObj.getFilteredSignalReference().getSignal();
         // EMF.setSignal(buffer);
         // EMF.applyFilter();
         // buffer = EMF.getFilteredSignal();
@@ -143,9 +146,9 @@ int main(int argc, char* argv[])
             outputFile << ",0";
         }
 
-        Med.setSignal(aXV);
-        Med.applyFilter();
-        buffer = Med.getFilteredSignal();
+        filterChainObj.getOriginalSignalReference().setSignal(aXV);
+        filterChainObj.applyFilters();
+        buffer = filterChainObj.getFilteredSignalReference().getSignal();
         // EMF.setSignal(buffer);
         // EMF.applyFilter();
         // buffer = EMF.getFilteredSignal();
@@ -155,9 +158,9 @@ int main(int argc, char* argv[])
             outputFile << ",0";
         }
 
-        Med.setSignal(aYV);
-        Med.applyFilter();
-        buffer = Med.getFilteredSignal();
+        filterChainObj.getOriginalSignalReference().setSignal(aYV);
+        filterChainObj.applyFilters();
+        buffer = filterChainObj.getFilteredSignalReference().getSignal();
         // EMF.setSignal(buffer);
         // EMF.applyFilter();
         // buffer = EMF.getFilteredSignal();
@@ -167,9 +170,9 @@ int main(int argc, char* argv[])
             outputFile << ",0";
         }
 
-        Med.setSignal(aZV);
-        Med.applyFilter();
-        buffer = Med.getFilteredSignal();
+        filterChainObj.getOriginalSignalReference().setSignal(wZV);
+        filterChainObj.applyFilters();
+        buffer = filterChainObj.getFilteredSignalReference().getSignal();
         // EMF.setSignal(buffer);
         // EMF.applyFilter();
         // buffer = EMF.getFilteredSignal();
