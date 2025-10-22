@@ -42,9 +42,11 @@ int main(int argc, char* argv[])
 
     std::unique_ptr<filters::filterBase<double>> EMFPtr = std::make_unique<filters::filterEMF<double>>(filters::EMFenvironment::PHYSICALS, 0.2, 0.0, 0.0, 0.0);
     std::unique_ptr<filters::filterBase<double>> MedPtr = std::make_unique<filters::filterMedian<double>>(16);
+    std::unique_ptr<filters::filterBase<double>> AproxPtr = std::make_unique<filters::approximation<double>>(true, 0.1, 5, filters::ErrorEstimate::MSE, filters::LinearizationType::LINEAR);
     filters::filterChain<double> filterChainObj;
     filterChainObj.appendFilter(MedPtr);
     filterChainObj.appendFilter(EMFPtr);
+    filterChainObj.appendFilter(AproxPtr);
     std::vector<double> aXV, aYV, aZV, wXV, wYV, wZV;
     
     // ИСПРАВЛЕНО: правильное открытие файла для записи
@@ -189,7 +191,7 @@ int main(int argc, char* argv[])
     std::cout << "Data processing completed. Output written to output.txt" << std::endl;
     
     // Проверяем, создался ли файл
-    std::ifstream checkFile("output.txt");
+    std::ifstream checkFile("output.log");
     if (checkFile.is_open()) {
         std::cout << "File output.txt successfully created!" << std::endl;
         checkFile.close();

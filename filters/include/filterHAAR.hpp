@@ -253,7 +253,7 @@ void filterHAAR<T>::applyFilter()
  * @return A reference to the original signal container.
  */
 template <typename T>
-signalContainer<T>& filterHAAR<T>::getOriginalSignalContainerReference()
+inline signalContainer<T>& filterHAAR<T>::getOriginalSignalContainerReference()
 {
     return this->originSignal_;
 }
@@ -265,7 +265,7 @@ signalContainer<T>& filterHAAR<T>::getOriginalSignalContainerReference()
  * @return A reference to the filtered signal container.
  */
 template <typename T>
-signalContainer<T>& filterHAAR<T>::getFilteredSignalContainerReference()
+inline signalContainer<T>& filterHAAR<T>::getFilteredSignalContainerReference()
 {
     return this->filteredSignal_;
 }

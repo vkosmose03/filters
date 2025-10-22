@@ -1,5 +1,5 @@
 /*
-    * filter.h
+    * filter.hpp
     *
     * This file is part of the filters library.
     * It defines the filterHAAR class for applying Haar wavelet transforms.
@@ -82,7 +82,7 @@ filterChain<T>::~filterChain()
 
 
 template <typename T>
-void filterChain<T>::appendFilter(std::unique_ptr<filterBase<T>>& filter)
+inline void filterChain<T>::appendFilter(std::unique_ptr<filterBase<T>>& filter)
 {
     this->filters_.push_back(std::move(filter));
 }
@@ -90,7 +90,7 @@ void filterChain<T>::appendFilter(std::unique_ptr<filterBase<T>>& filter)
 
 
 template <typename T>
-void filterChain<T>::clearFilters()
+inline void filterChain<T>::clearFilters()
 {
     this->filters_.clear();
 }
@@ -124,7 +124,7 @@ void filterChain<T>::applyFilters()
 
 
 template <typename T>
-void filterChain<T>::setSignal(const signalContainer<T> signal)
+inline void filterChain<T>::setSignal(const signalContainer<T> signal)
 {
     this->originalSignal_ = signal;
 }
@@ -132,7 +132,7 @@ void filterChain<T>::setSignal(const signalContainer<T> signal)
 
 
 template <typename T>
-signalContainer<T>& filterChain<T>::getOriginalSignalReference()
+inline signalContainer<T>& filterChain<T>::getOriginalSignalReference()
 {
     return this->originalSignal_;
 }
@@ -140,7 +140,7 @@ signalContainer<T>& filterChain<T>::getOriginalSignalReference()
 
 
 template <typename T>
-signalContainer<T>& filterChain<T>::getFilteredSignalReference()
+inline signalContainer<T>& filterChain<T>::getFilteredSignalReference()
 {
     return this->filteredSignal_;
 }
@@ -152,3 +152,5 @@ signalContainer<T>& filterChain<T>::getFilteredSignalReference()
 #include "filterMAF.hpp"
 #include "filterEMF.hpp"
 #include "filterMedian.hpp"
+#include "approximation.hpp"
+

@@ -161,7 +161,7 @@ void signalContainer<T>::setSignal(const std::vector<T> signal)
  * @return The signal data as a vector.
  */
 template <typename T>
-std::vector<T> signalContainer<T>::getSignal() const
+inline std::vector<T> signalContainer<T>::getSignal() const
 {
     return this->signal_;
 }
@@ -173,7 +173,7 @@ std::vector<T> signalContainer<T>::getSignal() const
  * @return A reference to the signal vector.
  */
 template <typename T>
-std::vector<T>& signalContainer<T>::getSignalReference()
+inline std::vector<T>& signalContainer<T>::getSignalReference()
 {
     return this->signal_;
 }
@@ -185,7 +185,7 @@ std::vector<T>& signalContainer<T>::getSignalReference()
  * @param signal The data to be appended.
  */
 template <typename T>
-void signalContainer<T>::appendSignal(T value)
+inline void signalContainer<T>::appendSignal(T value)
 {
     this->signal_.push_back(value);
     this->calculateCharacteristics();

@@ -88,30 +88,6 @@ filterMedian<T>::~filterMedian()
 
 
 /**
- * @brief Provides a reference to the original signal container.
- * @return A reference to the original signal container.
- */
-template <typename T>
-signalContainer<T>& filterMedian<T>::getOriginalSignalContainerReference()
-{
-    return this->originSignal_;
-}
-
-
-
-/**
- * @brief Provides a reference to the filtered signal container.
- * @return A reference to the filtered signal container.
- */
-template <typename T>
-signalContainer<T>& filterMedian<T>::getFilteredSignalContainerReference()
-{
-    return this->filteredSignal_;
-}
-
-
-
-/**
  * @brief Applies the median filter to the original signal.
  */
 template <typename T>
@@ -155,6 +131,30 @@ void filterMedian<T>::applyFilter()
     }
 
     this->filteredSignal_.setSignal(filteredSignal);
+}
+
+
+
+/**
+ * @brief Provides a reference to the original signal container.
+ * @return A reference to the original signal container.
+ */
+template <typename T>
+inline signalContainer<T>& filterMedian<T>::getOriginalSignalContainerReference()
+{
+    return this->originSignal_;
+}
+
+
+
+/**
+ * @brief Provides a reference to the filtered signal container.
+ * @return A reference to the filtered signal container.
+ */
+template <typename T>
+inline signalContainer<T>& filterMedian<T>::getFilteredSignalContainerReference()
+{
+    return this->filteredSignal_;
 }
 
 } // namespace filters

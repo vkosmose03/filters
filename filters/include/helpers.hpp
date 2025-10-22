@@ -162,5 +162,53 @@ double calculateVariance(const std::vector<T>& signal)
     return variance;
 }
 
+
+
+template <typename T>
+double calculateMAE(const std::vector<T>& original, const std::vector<T>& filtered)
+{
+    if (original.size() != filtered.size())
+        throw std::invalid_argument("Original and filtered signals must have the same size.");
+
+    double sumError = 0.0;
+    size_t n = original.size();
+
+    for (size_t i = 0; i < n; ++i)
+    {
+        sumError += std::abs(original[i] - filtered[i]);
+    }
+    return sumError / n;
+}
+
+
+
+template <typename T>
+double calculateMSE(const std::vector<T>& original, const std::vector<T>& filtered)
+{
+    if (original.size() != filtered.size())
+        throw std::invalid_argument("Original and filtered signals must have the same size.");
+
+    double sumError = 0.0;
+    size_t n = original.size();
+
+    for (size_t i = 0; i < n; ++i)
+    {
+        sumError += std::pow((original[i] - filtered[i]), 2);
+    }
+    return sumError / n;
+}
+
+
+
+template <typename T>
+double calculateRMSE(const std::vector<T>& original, const std::vector<T>& filtered)
+{
+    if (original.size() != filtered.size())
+        throw std::invalid_argument("Original and filtered signals must have the same size.");
+
+    double mse = calculateMSE(original, filtered);
+    return std::sqrt(mse);
+}
+
 }   // namespace helpers
 }   // namespace filters

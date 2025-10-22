@@ -20,11 +20,30 @@ enum class HAARthreshold
     HARD = 2
 };
 
+
+
 enum class EMFenvironment
 {
     PHYSICALS = 1,
     RADIOTECHNICAL = 2,
     UNDEFINED = 3
+};
+
+
+
+enum class ErrorEstimate
+{
+    MAE = 1,
+    MSE = 2,
+    RMSE = 3
+};
+
+
+
+enum class LinearizationType
+{
+    LINEAR = 1,
+    PARABOLIC = 2
 };
 
 }// namespace filters

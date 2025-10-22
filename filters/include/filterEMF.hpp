@@ -169,7 +169,7 @@ void filterEMF<T>::applyFilter()
  * @return A reference to the original signal container.
  */
 template <typename T>
-signalContainer<T>& filterEMF<T>::getOriginalSignalContainerReference()
+inline signalContainer<T>& filterEMF<T>::getOriginalSignalContainerReference()
 {
     return this->originSignal_;
 }
@@ -181,7 +181,7 @@ signalContainer<T>& filterEMF<T>::getOriginalSignalContainerReference()
  * @return A reference to the filtered signal container.
  */
 template <typename T>
-signalContainer<T>& filterEMF<T>::getFilteredSignalContainerReference()
+inline signalContainer<T>& filterEMF<T>::getFilteredSignalContainerReference()
 {
     return this->filteredSignal_;
 }
