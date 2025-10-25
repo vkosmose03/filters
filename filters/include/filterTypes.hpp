@@ -46,4 +46,27 @@ enum class LinearizationType
     PARABOLIC = 2
 };
 
+
+/**
+ * @brief This struct use to set parametrs to approximation filter.
+ * 
+ * @memberof useStabilization - set true if you want to stabilize
+ * around zero.
+ * @memberof stabilizeIncline - if incline less, then signal will 
+ * stabilize if incline bigger, then signal wouldn stabilize.
+ * @memberof maxIncline - maximum posible incline 
+ * (upper limit to approximation incline).
+ * @memberof windowSize - size of approximation step.
+ * @memberof errorEstimate - which error type will be estimating.
+ * @memberof type - type of line (e.g. linear, parabolic).
+ */
+struct approximationSettings
+{
+    bool useStabilization;
+    double stabilizeIncline;
+    double maxIncline;
+    int windowSize;
+    ErrorEstimate errorEstimate;
+    LinearizationType type;
+};
 }// namespace filters

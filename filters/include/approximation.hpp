@@ -31,54 +31,30 @@ private:
     ErrorEstimate errorEstimate_;
     LinearizationType type_;
 public:
-    approximation(signalContainer<T> originalSignal, bool stabilize = true, double stabilizeIncle = 0.0
-                  , double maxIncline = 0.1, int windowSize = 5
-                  , ErrorEstimate errorEstimate = ErrorEstimate::MSE
-                  , LinearizationType type = LinearizationType::LINEAR);
-    approximation(bool stabilize = true, double stabilizeIncle = 0.0
-                  , double maxIncline = 0.1, int windowSize = 5
-                  , ErrorEstimate errorEstimate = ErrorEstimate::RMSE
-                  , LinearizationType type = LinearizationType::LINEAR);
+    approximation(approximationSettings settings);
     ~approximation();
 
     void applyFilter();
 
-    signalContainer<T>& getOriginalSignalContainerReference();
-    signalContainer<T>& getFilteredSignalContainerReference();
+    signalContainer<T>& getOriginalSignalContainerReference() { return this->originalSignal_; };
+    signalContainer<T>& getFilteredSignalContainerReference() { return this->filteredSignal_; };
 
+    void setSignal(const std::vector<T>signal) { this->originalSignal_.setSignal(signal); }
+    std::vector<T> getSignal() const { return this->filteredSignal_.getSignal(); }
 };
 
 
 
 template <typename T>
-approximation<T>::approximation(signalContainer<T> originalSignal, bool stabilize, double stabilizeIncline                       
-                                , double maxIncline, int windowSize
-                                , ErrorEstimate errorEstimate, LinearizationType type)
-: originalSignal_(originalSignal)
-, filteredSignal_()
-, stabilize_(stabilize)
-, stabilizeIncline_(stabilizeIncline)
-, maxIncline_(maxIncline)
-, windowSize_(windowSize)
-, errorEstimate_(errorEstimate)
-, type_(type)
-{
-}
-
-
-
-template <typename T>
-approximation<T>::approximation(bool stabilize, double stabilizeIncline
-                                , double maxIncline, int windowSize
-                                , ErrorEstimate errorEstimate, LinearizationType type)
+approximation<T>::approximation(approximationSettings settings)
 : originalSignal_()
 , filteredSignal_()
-, stabilize_(stabilize)
-, stabilizeIncline_(stabilizeIncline)
-, maxIncline_(maxIncline)
-, windowSize_(windowSize)
-, errorEstimate_(errorEstimate)
-, type_(type)
+, stabilize_(settings.useStabilization)
+, stabilizeIncline_(settings.stabilizeIncline)
+, maxIncline_(settings.maxIncline)
+, windowSize_(settings.windowSize)
+, errorEstimate_(settings.errorEstimate)
+, type_(settings.type)
 {
 }
 
@@ -217,21 +193,4 @@ void approximation<T>::applyFilter()
 
     this->filteredSignal_.setSignal(approxSignal);
 }
-
-
-
-template <typename T>
-inline signalContainer<T>& approximation<T>::getOriginalSignalContainerReference()
-{
-    return this->originalSignal_;
-}
-
-
-
-template <typename T>
-inline signalContainer<T>& approximation<T>::getFilteredSignalContainerReference()
-{
-    return this->filteredSignal_;
-}
-
 } // namespace filters

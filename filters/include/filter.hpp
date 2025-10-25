@@ -31,6 +31,8 @@ public:
     virtual void applyFilter() = 0;
     virtual signalContainer<T>& getOriginalSignalContainerReference() = 0;
     virtual signalContainer<T>& getFilteredSignalContainerReference() = 0;
+    void setSignal(const std::vector<T> signal) = 0;
+    std::vector<T> getSignal() const = 0;
 
     virtual ~filterBase() = default;
 };
