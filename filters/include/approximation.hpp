@@ -25,7 +25,7 @@ private:
     signalContainer<T> originalSignal_;
     signalContainer<T> filteredSignal_;
     bool stabilize_;
-    double stabilizeIncle_;
+    double stabilizeIncline_;
     double maxIncline_;
     int windowSize_;
     ErrorEstimate errorEstimate_;
@@ -51,13 +51,13 @@ public:
 
 
 template <typename T>
-approximation<T>::approximation(signalContainer<T> originalSignal, bool stabilize, double stabilizeIncle                       
+approximation<T>::approximation(signalContainer<T> originalSignal, bool stabilize, double stabilizeIncline                       
                                 , double maxIncline, int windowSize
                                 , ErrorEstimate errorEstimate, LinearizationType type)
 : originalSignal_(originalSignal)
 , filteredSignal_()
 , stabilize_(stabilize)
-, stabilizeIncle_(stabilizeIncle)
+, stabilizeIncline_(stabilizeIncline)
 , maxIncline_(maxIncline)
 , windowSize_(windowSize)
 , errorEstimate_(errorEstimate)
@@ -68,13 +68,13 @@ approximation<T>::approximation(signalContainer<T> originalSignal, bool stabiliz
 
 
 template <typename T>
-approximation<T>::approximation(bool stabilize, double stabilizeIncle
+approximation<T>::approximation(bool stabilize, double stabilizeIncline
                                 , double maxIncline, int windowSize
                                 , ErrorEstimate errorEstimate, LinearizationType type)
 : originalSignal_()
 , filteredSignal_()
 , stabilize_(stabilize)
-, stabilizeIncle_(stabilizeIncle)   
+, stabilizeIncline_(stabilizeIncline)
 , maxIncline_(maxIncline)
 , windowSize_(windowSize)
 , errorEstimate_(errorEstimate)
@@ -148,8 +148,6 @@ void approximation<T>::applyFilter()
                     }
                     approxSignal[windowStart + i] = incline * i + intercept;
                 }
-
-                inclineSum += incline;
             }
             else if (this->errorEstimate_ == ErrorEstimate::MAE)
             {
@@ -197,17 +195,16 @@ void approximation<T>::applyFilter()
                     }
                     approxSignal[windowStart + i] = incline * i + intercept;
                 }
-
-                inclineSum += incline;
             }
 
+            inclineSum += incline;
             startIndex -= windowSize;
         }
 
         if (this->stabilize_)
         {
             double averageIncline = inclineSum / (n / windowSize);
-            if (std::abs(averageIncline) < this->stabilizeIncle_)
+            if (std::abs(averageIncline) < this->stabilizeIncline_)
             {
                 double mean = std::accumulate(approxSignal.begin(), approxSignal.end(), 0.0) / n;
                 for (size_t i = 0; i < n; ++i)
