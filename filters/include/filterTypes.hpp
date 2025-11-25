@@ -47,6 +47,7 @@ enum class LinearizationType
 };
 
 
+
 /**
  * @brief This struct use to set parametrs to approximation filter.
  * 
@@ -68,5 +69,43 @@ struct approximationSettings
     int windowSize;
     ErrorEstimate errorEstimate;
     LinearizationType type;
+};
+
+
+
+/**
+ * @brief This struct use to set parametrs to EMF filter.
+ * 
+ * @memberof signalType - type of signal (e.g. physical, radiotechnical).
+ * @memberof physicalK - smoothing factor for physical signals.
+ * @memberof standardK - standard smoothing factor for radiotechnical and undefined signals.
+ * @memberof maximalK - maximum smoothing factor for radiotechnical and undefined signals.
+ * @memberof threshold - threshold value for radiotechnical signals.
+ */
+struct EMFfilterSettings
+{
+    EMFenvironment signalType;
+    double physicalK;
+    double standardK;
+    double maximalK;
+    double threshold;
+};
+
+
+
+/**
+ * @brief This struct use to set parametrs to HAAR filter.
+ * 
+ * @memberof thresholdType - type of thresholding (e.g. soft, hard).
+ * @memberof thresholdValue - threshold value for filtering.
+ * @memberof filteringWindow - size of filtering window.
+ * @memberof depth - depth of the Haar transform.
+ */
+struct HAARfilterSettings
+{
+    HAARthreshold thresholdType;
+    double thresholdValue;
+    int filteringWindow;
+    int depth;
 };
 }// namespace filters

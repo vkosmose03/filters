@@ -40,9 +40,9 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::unique_ptr<filters::filterBase<double>> EMFPtr = std::make_unique<filters::filterEMF<double>>(filters::EMFenvironment::PHYSICALS, 0.2, 0.0, 0.0, 0.0);
+    std::unique_ptr<filters::filterBase<double>> EMFPtr = std::make_unique<filters::filterEMF<double>>(filters::EMFfilterSettings{filters::EMFenvironment::PHYSICALS, 0.2, 0.0, 0.0, 0.0});
     std::unique_ptr<filters::filterBase<double>> MedPtr = std::make_unique<filters::filterMedian<double>>(16);
-    std::unique_ptr<filters::filterBase<double>> AproxPtr = std::make_unique<filters::approximation<double>>(true, 0.1, 5, filters::ErrorEstimate::MSE, filters::LinearizationType::LINEAR);
+    std::unique_ptr<filters::filterBase<double>> AproxPtr = std::make_unique<filters::approximation<double>>(filters::approximationSettings{true, 0.1, 0.01, 5, filters::ErrorEstimate::MSE, filters::LinearizationType::LINEAR});
     filters::filterChain<double> filterChainObj;
     filterChainObj.appendFilter(MedPtr);
     filterChainObj.appendFilter(EMFPtr);

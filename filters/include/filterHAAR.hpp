@@ -43,7 +43,7 @@ class filterHAAR : public filterBase<T>
 private:
     HAARthreshold thresholdType_;
     double thresholdValue_;
-    signalContainer<T> originSignal_;
+    signalContainer<T> originalSignal_;
     signalContainer<T> filteredSignal_;
     int filteringWindow_;
     int depth_;
@@ -52,48 +52,32 @@ private:
     void HAARreconstruction(std::vector<T>& signal, const std::vector<double>& coeffs);
     T thresholding(T value);
 public:
-    filterHAAR(signalContainer<T> signal, HAARthreshold thresholdType, double thresholdValue = 0.0, int filteringWindow = 0, int depth = 1);
-    filterHAAR(HAARthreshold thresholdType, double thresholdValue = 0.0, int filteringWindow = 0, int depth = 0);
+    filterHAAR(HAARfilterSettings settings);
     ~filterHAAR();
 
     void applyFilter();
 
-    signalContainer<T>& getOriginalSignalContainerReference();
-    signalContainer<T>& getFilteredSignalContainerReference();
+    signalContainer<T>& getOriginalSignalContainerReference() { return this->originalSignal_; };
+    signalContainer<T>& getFilteredSignalContainerReference() { return this->filteredSignal_; };
+
+    void setSignal(const std::vector<T>signal) { this->originalSignal_.setSignal(signal); }
+    std::vector<T> getSignal() const { return this->filteredSignal_.getSignal(); }
 };
 
 
 
 /**
  * @brief Constructor for the filterHAAR class.
- * @param originSignal The original signal container.
  * @param thresholdType The type of thresholding to apply (soft or hard).
  * @param thresholdValue The threshold value for filtering.
  * @param filteringWindow The size of the filtering window.
  */
 template <typename T>
-filterHAAR<T>::filterHAAR(signalContainer<T> signal, HAARthreshold thresholdType, double thresholdValue, int filteringWindow, int depth)
-: originSignal_(signal)
-, thresholdType_(thresholdType)
-, thresholdValue_(thresholdValue)
-, filteringWindow_(filteringWindow)
-, depth_(depth)
-{
-}
-
-
-/**
- * @brief Constructor for the filterHAAR class.
- * @param thresholdType The type of thresholding to apply (soft or hard).
- * @param thresholdValue The threshold value for filtering.
- * @param filteringWindow The size of the filtering window.
- */
-template <typename T>
-filterHAAR<T>::filterHAAR(HAARthreshold thresholdType, double thresholdValue, int filteringWindow, int depth)
-: thresholdType_(thresholdType)
-, thresholdValue_(thresholdValue)
-, filteringWindow_(filteringWindow)
-, depth_(depth)
+filterHAAR<T>::filterHAAR(HAARfilterSettings settings)
+: thresholdType_(settings.thresholdType)
+, thresholdValue_(settings.thresholdValue)
+, filteringWindow_(settings.filteringWindow)
+, depth_(settings.depth)
 {
 }
 
@@ -187,7 +171,7 @@ void filterHAAR<T>::HAARreconstruction(std::vector<T>& signal, const std::vector
 template <typename T>
 void filterHAAR<T>::applyFilter()
 {
-    std::vector<T> originalSignal(this->originSignal_.getSignal());
+    std::vector<T> originalSignal(this->originalSignal_.getSignal());
     std::vector<T> filteredSignal;
     if (originalSignal.size() < 2)
         return;
@@ -244,30 +228,6 @@ void filterHAAR<T>::applyFilter()
            filteredSignal[j] = coeffsBuffer[j];
         }
     }
-}
-
-
-
-/**
- * @brief Provides a reference to the original signal container.
- * @return A reference to the original signal container.
- */
-template <typename T>
-inline signalContainer<T>& filterHAAR<T>::getOriginalSignalContainerReference()
-{
-    return this->originSignal_;
-}
-
-
-
-/**
- * @brief Provides a reference to the filtered signal container.
- * @return A reference to the filtered signal container.
- */
-template <typename T>
-inline signalContainer<T>& filterHAAR<T>::getFilteredSignalContainerReference()
-{
-    return this->filteredSignal_;
 }
 
 } // namespace filters

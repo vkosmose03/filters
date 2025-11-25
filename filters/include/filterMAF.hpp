@@ -36,32 +36,20 @@ class filterMAF : public filterBase<T>
 {
 private:
     int windowSize_;
-    signalContainer<T> originSignal_;
+    signalContainer<T> originalSignal_;
     signalContainer<T> filteredSignal_;
 public:
-    filterMAF(signalContainer<T> signal, int windowSize);
     filterMAF(int windowSize);
     ~filterMAF();
 
     void applyFilter();
 
-    signalContainer<T>& getOriginalSignalContainerReference();
-    signalContainer<T>& getFilteredSignalContainerReference();
+    signalContainer<T>& getOriginalSignalContainerReference() { return this->originalSignal_; };
+    signalContainer<T>& getFilteredSignalContainerReference() { return this->filteredSignal_; };
+
+    void setSignal(const std::vector<T>signal) { this->originalSignal_.setSignal(signal); }
+    std::vector<T> getSignal() const { return this->filteredSignal_.getSignal(); }
 };
-
-
-/**
- * @brief Constructor for the filterMAF class.
- * @param originSignal The original signal container.
- * @param windowSize The size of the moving window for averaging.
- */
-template <typename T>
-filterMAF<T>::filterMAF(signalContainer<T> signal, int windowSize)
-: originSignal_(signal)
-, filteredSignal_()
-, windowSize_(windowSize)
-{
-}
 
 
 
@@ -97,18 +85,18 @@ void filterMAF<T>::applyFilter()
         return;
 
     int temp = this->windowSize_;
-    if (temp > this->originSignal_.signal_.size())
-        this->windowSize_ = this->originSignal_.signal_.size();
-    size_t n = this->originSignal_.signal_.size();
+    if (temp > this->originalSignal_.signal_.size())
+        this->windowSize_ = this->originalSignal_.signal_.size();
+    size_t n = this->originalSignal_.signal_.size();
 
     this->filteredSignal_.signal_.resize(n);
-    this->filteredSignal_.signal_[0] = this->originSignal_.signal_[0];
+    this->filteredSignal_.signal_[0] = this->originalSignal_.signal_[0];
     for (size_t i = 1; i < n; ++i)
     {
         while (i < this->windowSize_)
         {
             this->filteredSignal_.signal_[i] = this->filteredSignal_.signal_[i - 1] * (i - 1) / i 
-                                                        + this->originSignal_.signal_[i] / i;
+                                                        + this->originalSignal_.signal_[i] / i;
             ++i;
         }
         
@@ -116,34 +104,10 @@ void filterMAF<T>::applyFilter()
         {
             if (i - j < 0)
                 break;
-            this->filteredSignal_.signal_[i] += this->originSignal_.signal_[i - j] / this->windowSize_;
+            this->filteredSignal_.signal_[i] += this->originalSignal_.signal_[i - j] / this->windowSize_;
         }
     }
     this->windowSize_ = temp;
-}
-
-
-
-/**
- * @brief Provides a reference to the original signal container.
- * @return A reference to the original signal container.
- */
-template <typename T>
-inline signalContainer<T>& filterMAF<T>::getOriginalSignalContainerReference()
-{
-    return this->originSignal_;
-}
-
-
-
-/**
- * @brief Provides a reference to the filtered signal container.
- * @return A reference to the filtered signal container.
- */
-template <typename T>
-inline signalContainer<T>& filterMAF<T>::getFilteredSignalContainerReference()
-{
-    return this->filteredSignal_;
 }
 
 } // namespace filters

@@ -36,32 +36,20 @@ class filterMedian : public filterBase<T>
 {
 private:
     int windowSize_;
-    signalContainer<T> originSignal_;
+    signalContainer<T> originalSignal_;
     signalContainer<T> filteredSignal_;
 public:
-    filterMedian(signalContainer<T> originSignal, int windowSize);
     filterMedian(int windowSize);
     ~filterMedian();
 
     void applyFilter();
 
-    signalContainer<T>& getOriginalSignalContainerReference();
-    signalContainer<T>& getFilteredSignalContainerReference();
+    signalContainer<T>& getOriginalSignalContainerReference() { return this->originalSignal_; };
+    signalContainer<T>& getFilteredSignalContainerReference() { return this->filteredSignal_; };
+
+    void setSignal(const std::vector<T>signal) { this->originalSignal_.setSignal(signal); }
+    std::vector<T> getSignal() const { return this->filteredSignal_.getSignal(); }
 };
-
-
-
-/**
- * @brief Constructor for the filterMedian class.
- * @param originSignal The original signal container.
- * @param windowSize The size of the moving window for median filtering.
- */
-template <typename T>
-filterMedian<T>::filterMedian(signalContainer<T> originSignal, int windowSize)
-: windowSize_(windowSize)
-, originSignal_(originSignal)
-{
-}
 
 
 
@@ -93,7 +81,7 @@ filterMedian<T>::~filterMedian()
 template <typename T>
 void filterMedian<T>::applyFilter()
 {
-    std::vector<T> originalSignal(this->originSignal_.getSignal());
+    std::vector<T> originalSignal(this->originalSignal_.getSignal());
     std::vector<T> filteredSignal;
     filteredSignal.resize(0);
     size_t n = originalSignal.size();
@@ -131,30 +119,6 @@ void filterMedian<T>::applyFilter()
     }
 
     this->filteredSignal_.setSignal(filteredSignal);
-}
-
-
-
-/**
- * @brief Provides a reference to the original signal container.
- * @return A reference to the original signal container.
- */
-template <typename T>
-inline signalContainer<T>& filterMedian<T>::getOriginalSignalContainerReference()
-{
-    return this->originSignal_;
-}
-
-
-
-/**
- * @brief Provides a reference to the filtered signal container.
- * @return A reference to the filtered signal container.
- */
-template <typename T>
-inline signalContainer<T>& filterMedian<T>::getFilteredSignalContainerReference()
-{
-    return this->filteredSignal_;
 }
 
 } // namespace filters

@@ -46,23 +46,23 @@ template <typename T>
 class filterEMF : public filterBase<T>
 {
 private:
-    signalContainer<T> originSignal_;
+    signalContainer<T> originalSignal_;
     signalContainer<T> filteredSignal_;
     EMFenvironment signalType_;
     double k_;
     double std_k_, max_k_;
     double threshold_;
 public:
-    filterEMF(signalContainer<T> originSignal, EMFenvironment signalType, double k = 0.5
-              , double std_k = 0.5, double max_k = 0.5, double threshold = 0.0);
-    filterEMF(EMFenvironment signalType, double k = 0.5
-              , double std_k = 0.5, double max_k = 0.5, double threshold = 0.0);
+    filterEMF(EMFfilterSettings settings);
     ~filterEMF();
 
     void applyFilter();
 
-    signalContainer<T>& getOriginalSignalContainerReference();
-    signalContainer<T>& getFilteredSignalContainerReference();
+    signalContainer<T>& getOriginalSignalContainerReference() { return this->originalSignal_; };
+    signalContainer<T>& getFilteredSignalContainerReference() { return this->filteredSignal_; };
+
+    void setSignal(const std::vector<T>signal) { this->originalSignal_.setSignal(signal); }
+    std::vector<T> getSignal() const { return this->filteredSignal_.getSignal(); }
 };
 
 
@@ -77,14 +77,13 @@ public:
  * @param threshold The threshold value for the filter.
  */
 template <typename T>
-filterEMF<T>::filterEMF(EMFenvironment signalType
-        , double k, double std_k, double max_k, double threshold)
+filterEMF<T>::filterEMF(EMFfilterSettings settings)
 : filteredSignal_()
-, signalType_(signalType)
-, k_(k)
-, std_k_(std_k)
-, max_k_(max_k)
-, threshold_(threshold)
+, signalType_(settings.signalType)
+, k_(settings.physicalK)
+, std_k_(settings.standardK)
+, max_k_(settings.maximalK)
+, threshold_(settings.threshold)
 {
 }
 
@@ -110,7 +109,7 @@ void filterEMF<T>::applyFilter()
     (this->signalType_ == EMFenvironment::UNDEFINED || this->signalType_ == EMFenvironment::RADIOTECHNICAL))
         return;
 
-    std::vector<T> originalSignal(this->originSignal_.getSignal());
+    std::vector<T> originalSignal(this->originalSignal_.getSignal());
     std::vector<T> filteredSignal;
     size_t n = originalSignal.size();
 
@@ -160,30 +159,6 @@ void filterEMF<T>::applyFilter()
     }
 
     this->filteredSignal_.setSignal(filteredSignal);
-}
-
-
-
-/**
- * @brief Provides a reference to the original signal container.
- * @return A reference to the original signal container.
- */
-template <typename T>
-inline signalContainer<T>& filterEMF<T>::getOriginalSignalContainerReference()
-{
-    return this->originSignal_;
-}
-
-
-
-/**
- * @brief Provides a reference to the filtered signal container.
- * @return A reference to the filtered signal container.
- */
-template <typename T>
-inline signalContainer<T>& filterEMF<T>::getFilteredSignalContainerReference()
-{
-    return this->filteredSignal_;
 }
 
 } // namespace filters
