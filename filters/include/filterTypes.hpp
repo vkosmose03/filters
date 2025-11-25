@@ -67,6 +67,7 @@ struct approximationSettings
     double stabilizeIncline;
     double maxIncline;
     int windowSize;
+    double offset;
     ErrorEstimate errorEstimate;
     LinearizationType type;
 };

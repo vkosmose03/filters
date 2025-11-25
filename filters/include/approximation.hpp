@@ -28,6 +28,7 @@ private:
     double stabilizeIncline_;
     double maxIncline_;
     int windowSize_;
+    T offset_;
     ErrorEstimate errorEstimate_;
     LinearizationType type_;
 public:
@@ -53,6 +54,7 @@ approximation<T>::approximation(approximationSettings settings)
 , stabilizeIncline_(settings.stabilizeIncline)
 , maxIncline_(settings.maxIncline)
 , windowSize_(settings.windowSize)
+, offset_(static_cast<T>(settings.offset))
 , errorEstimate_(settings.errorEstimate)
 , type_(settings.type)
 {
@@ -187,6 +189,13 @@ void approximation<T>::applyFilter()
                 {
                     approxSignal[i] = approxSignal[i] - mean;
                 }
+            }
+        }
+        else if (this->offset_ != 0.0)
+        {
+            for (size_t i = 0; i < n; ++i)
+            {
+                approxSignal[i] += this->offset_;
             }
         }
     }
