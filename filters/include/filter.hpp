@@ -102,6 +102,8 @@ inline void filterChain<T>::clearFilters()
 template <typename T>
 void filterChain<T>::removeFilter(size_t index)
 {
+    if (filters_.size() < index + 1)
+        return;
     auto begin = this->filters_.begin();
     this->filters_.erase(begin + index);
 }
