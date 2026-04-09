@@ -1,0 +1,426 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.0 Chrome/140.0.7339.249 Electron/38.7.2 Safari/537.36" version="29.3.0" pages="3">
+  <diagram name="Классы" id="BQWZ7uqwkU0I0AMXBMUk">
+    <mxGraphModel dx="673" dy="521" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="VR1LaUAzyRuGMt5Sh-mO-1" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" value="&lt;div&gt;Для того чтобы вычислить текущее значение нейрона, мне нужно умножить выход каждого нейрона предыдущего нейрона на его вес, т.е.: input = Sum(w_i * out_i), где w_i - входной вес для i-того нейрона, out_i - выход i-того нейрона.&lt;/div&gt;&lt;div&gt;Тогда проще всего будет сделать это как умножения вектора-строки, на вектор-столбец.&lt;/div&gt;&lt;div&gt;А если я введу несколько векторов-строк, как входные веса для нескольких нейронов и буду использовать 1 вектор-столбец, как выход нейронов прошлого слоя.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Также надо не забыть, что тогда я получаю односвязный список с обратной связью.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Вывод: Для того, чтобы мне получить текущий вход нейрона, мне в классе нужно иметь вектор-столбец весов + знать веса нейронов на прошлых уровнях.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Функция activate активирует нейроны согласно заданой функции.&lt;/div&gt;&lt;div&gt;Также в класс добавлена матрица ошибок, которая позволяет оптимизировать вычисление градиента для слоя.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="310" width="400" as="geometry" />
+        </mxCell>
+        <mxCell id="VR1LaUAzyRuGMt5Sh-mO-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Eigen::MatrixXd weights_; - входные веса для текущего слоя&lt;div&gt;&lt;div&gt;Eigen::VectorXd outputs_; - выходные значения наейронов текущего слоя&lt;/div&gt;&lt;div&gt;Layer&amp;amp; prevLayer; - ссылка на прошлый слой&lt;/div&gt;&lt;div&gt;Eigen::VectorXd biases_; - смещения для нейронов&lt;/div&gt;&lt;div&gt;Eigen::VectorXd deltas_; - ошибки на текущем слое&lt;/div&gt;&lt;div&gt;void activate();&lt;/div&gt;&lt;div&gt;void activateNeurons();&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="290" width="280" x="480" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VR1LaUAzyRuGMt5Sh-mO-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="class Layer" vertex="1">
+          <mxGeometry height="40" width="280" x="480" as="geometry" />
+        </mxCell>
+        <mxCell id="PNdxooCHyYHtXB11cRfC-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Верхнее решение хорошо, но оно не даст в дальнейшем ввести рекурсию и всевозможные усложнения, поэтому требуется модернизировать это решение так, чтобы можно было спокойно реализовывать дополнительные функции.&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Тогда можно выше представленный класс использовать как базовый, а для введения рекурсии введем вектор, в который будем сохранять прошлые выходы данного слоя.&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;div&gt;Функция addRecursion позволяет ввести рекурсию для текущего слоя.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="230" width="400" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="PNdxooCHyYHtXB11cRfC-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="std::vector&amp;lt;Eigen::VectorXd&amp;gt; recurentBuffer_; - ссылка на прошлый слой&lt;div&gt;uint recurentDeep_; - глубина рекурсии&lt;br&gt;&lt;div&gt;void addRecursion(&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;std::vector&amp;lt;Eigen::VectorXd&amp;gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;recurentBuffer&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;); - вводит рекурсию&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="290" width="280" x="480" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="PNdxooCHyYHtXB11cRfC-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="class RLayer : Layer" vertex="1">
+          <mxGeometry height="40" width="280" x="480" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="6qYssis5pjoDtXCkbWJk-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="Теперь определим класс нейронной сети, основным элементом будет вектор, который будет содержать слои, что полностью определяет топологию нейронной сети.&lt;div&gt;Далее необходимо ввести входные функцию прямого распространения, на ней будет основана работа нашей нейронной сети, но функция будет приватной, тк она не нужна для использования вне класса.&lt;/div&gt;&lt;div&gt;После прямого распространения необходимо ввести функцию обучения.&lt;/div&gt;&lt;div&gt;При обучении нам необходимо производить расчет ошибки полученных данных, данную функцию мы также введем как приватную.&lt;/div&gt;&lt;div&gt;Функция обратного распространения ошибки будет приватной и будет проходить нейронную сеть в обратно порядке и вызывать функции расчета ошибки и градиентного спуска последовательно для каждого слоя.&lt;/div&gt;&lt;div&gt;Функция обучения будет публичной и будет обучать нейросеть на входных данных.&lt;/div&gt;&lt;div&gt;Также нам нужна функция работы нейронной сети, назовет это одним тиком (подача данных -&amp;gt; работа сети -&amp;gt; выходные данные).&lt;/div&gt;" vertex="1">
+          <mxGeometry height="320" width="400" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="6qYssis5pjoDtXCkbWJk-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="std::vector&amp;lt;T&amp;gt; layers_; - слои нейросети&lt;div&gt;double step_; - шаг градиента&lt;/div&gt;&lt;div&gt;std::pair&amp;lt;int, int&amp;gt; topology_; - топология сети&lt;/div&gt;&lt;div&gt;double requiredAccuracy_; - заданная точность&lt;/div&gt;&lt;div&gt;double accuracy_; - полученная точность&lt;/div&gt;&lt;div&gt;std::vector&amp;lt;double&amp;gt; errorCalculation(T layer, std::vector out); - функция рассчета ошибки&lt;/div&gt;&lt;div&gt;void forwardPropagation(); - прямое распространение&lt;/div&gt;&lt;div&gt;void gradient(); - применение градиента&lt;/div&gt;&lt;div&gt;void backPropagation(); - обратное распространение&lt;/div&gt;&lt;div&gt;void learAI(std::vector&amp;lt;double&amp;gt; data); - функция обучения&lt;/div&gt;&lt;div&gt;std::vector&amp;lt;double&amp;gt; tick(std::vector&amp;lt;double&amp;gt; data); - такт работы нейронной сети&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="290" width="280" x="480" y="879" as="geometry" />
+        </mxCell>
+        <mxCell id="6qYssis5pjoDtXCkbWJk-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="template&amp;lt;typename T&amp;gt; class lightAI" vertex="1">
+          <mxGeometry height="40" width="280" x="480" y="839" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="22b4Hw1C9j54VnstH3Lf" name="Прямое распространение">
+    <mxGraphModel dx="1084" dy="839" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="8nlfGLelYdmKPvVAszlN-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="Алгоритм прямого распространения должен быть примерно следующим:&amp;nbsp;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Входные данные нормировать&lt;/li&gt;&lt;li&gt;После чего для всех слоев должны вызываться функции activate&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;В свою очередь функция activate должна делать следующее:&lt;/div&gt;&lt;/div&gt;&lt;div&gt;Для не рекуррентных:&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Перемножение outputs_ прошлого слоя на weights_ текущего слоя&lt;/li&gt;&lt;li&gt;После чего происходит активация путем вызова функции activateNeurons();&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;Для рекуррентных:&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Перемножение outputs_ прошлого слоя на weights_ текущего слоя&lt;/li&gt;&lt;li&gt;Вызов функции addRecursion&lt;/li&gt;&lt;li&gt;После чего происходит активация путем вызова функции activateNeurons&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="440" width="400" as="geometry" />
+        </mxCell>
+        <mxCell id="RCxIShfmrEVzmXlXDf8l-1" edge="1" parent="1" source="8nlfGLelYdmKPvVAszlN-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="8nlfGLelYdmKPvVAszlN-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MFo9_lyqb5of3vh4vBuY-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="addRecursion должна прибавлять к текущему значению нейронов (до активации) выходы нейронов этого же слоя в прошлый момент. прибавляется последние&amp;nbsp;" vertex="1">
+          <mxGeometry height="160" width="400" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-4" edge="1" parent="1" source="Z_Ll0wsWwATiXt52FPnu-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Z_Ll0wsWwATiXt52FPnu-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-2" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Обучение" vertex="1">
+          <mxGeometry height="50" width="100" x="590" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-6" edge="1" parent="1" source="Z_Ll0wsWwATiXt52FPnu-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Z_Ll0wsWwATiXt52FPnu-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-3" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="Подать входные данные" vertex="1">
+          <mxGeometry height="60" width="190" x="545" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-9" edge="1" parent="1" source="Z_Ll0wsWwATiXt52FPnu-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="640" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Нормирование данных" vertex="1">
+          <mxGeometry height="40" width="180" x="550" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-12" edge="1" parent="1" source="Z_Ll0wsWwATiXt52FPnu-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Z_Ll0wsWwATiXt52FPnu-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-15" edge="1" parent="1" source="Z_Ll0wsWwATiXt52FPnu-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Z_Ll0wsWwATiXt52FPnu-19">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-10" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Слои еще есть?" vertex="1">
+          <mxGeometry height="80" width="150" x="565" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-14" edge="1" parent="1" source="Z_Ll0wsWwATiXt52FPnu-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Z_Ll0wsWwATiXt52FPnu-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="activate" vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-16" edge="1" parent="1" source="Z_Ll0wsWwATiXt52FPnu-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="Z_Ll0wsWwATiXt52FPnu-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;span style=&quot;text-align: left;&quot;&gt;activateNeurons&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Да" vertex="1">
+          <mxGeometry height="30" width="45" x="520" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-23" edge="1" parent="1" source="Z_Ll0wsWwATiXt52FPnu-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="639.9999999999998" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Сохранить выходные данные как выход скрытого слоя" vertex="1">
+          <mxGeometry height="60" width="120" x="680" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_Ll0wsWwATiXt52FPnu-20" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Нет" vertex="1">
+          <mxGeometry height="30" width="25" x="715" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-1" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="e--MH9kbN5G0ncR4cN5T-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-2" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Обучение" vertex="1">
+          <mxGeometry height="50" width="100" x="590" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-3" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="e--MH9kbN5G0ncR4cN5T-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-4" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="Подать входные данные" vertex="1">
+          <mxGeometry height="60" width="190" x="545" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-5" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="640" y="900" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Нормирование данных" vertex="1">
+          <mxGeometry height="40" width="180" x="550" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-7" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="e--MH9kbN5G0ncR4cN5T-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-8" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="e--MH9kbN5G0ncR4cN5T-16">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-9" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Слои еще есть?" vertex="1">
+          <mxGeometry height="80" width="150" x="565" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-22" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="e--MH9kbN5G0ncR4cN5T-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="activate" vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="970" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-12" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="e--MH9kbN5G0ncR4cN5T-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;span style=&quot;text-align: left;&quot;&gt;activateNeurons&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="1130" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Да" vertex="1">
+          <mxGeometry height="30" width="45" x="520" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-15" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="639.9999999999998" y="1310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Сохранить выходные данные как выход скрытого слоя" vertex="1">
+          <mxGeometry height="60" width="120" x="680" y="1169" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Нет" vertex="1">
+          <mxGeometry height="30" width="25" x="715" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-19" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Без рекурсии" vertex="1">
+          <mxGeometry height="30" width="160" x="560" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-20" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="С рекурсией" vertex="1">
+          <mxGeometry height="30" width="160" x="560" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-23" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="e--MH9kbN5G0ncR4cN5T-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="addRecursion" vertex="1">
+          <mxGeometry height="60" width="120" x="460" y="1050" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-25" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Конец" vertex="1">
+          <mxGeometry height="50" width="100" x="590" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-26" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Конец" vertex="1">
+          <mxGeometry height="50" width="100" x="590" y="1310" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-30" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="e--MH9kbN5G0ncR4cN5T-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-27" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="addRecursion" vertex="1">
+          <mxGeometry height="50" width="100" x="110" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-32" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="e--MH9kbN5G0ncR4cN5T-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Создать объект RLayer buffer" vertex="1">
+          <mxGeometry height="40" width="120" x="100" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-33" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="e--MH9kbN5G0ncR4cN5T-34">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="40" y="870.2727272727273" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JvZlV8VLIx2YtBQWjwYA-6" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="JvZlV8VLIx2YtBQWjwYA-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-31" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Глубина рекурсии достигнута?" vertex="1">
+          <mxGeometry height="80" width="150" x="85" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="JvZlV8VLIx2YtBQWjwYA-1" edge="1" parent="1" source="e--MH9kbN5G0ncR4cN5T-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="60.45454545454527" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e--MH9kbN5G0ncR4cN5T-34" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Прибавить к буферу значение прошлого слоя" vertex="1">
+          <mxGeometry height="60" width="120" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="JvZlV8VLIx2YtBQWjwYA-3" edge="1" parent="1" source="JvZlV8VLIx2YtBQWjwYA-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="e--MH9kbN5G0ncR4cN5T-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JvZlV8VLIx2YtBQWjwYA-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Сослать buffer на прошлый слой" vertex="1">
+          <mxGeometry height="60" width="120" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="JvZlV8VLIx2YtBQWjwYA-4" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Нет" vertex="1">
+          <mxGeometry height="30" width="30" x="60" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="JvZlV8VLIx2YtBQWjwYA-8" edge="1" parent="1" source="JvZlV8VLIx2YtBQWjwYA-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="JvZlV8VLIx2YtBQWjwYA-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JvZlV8VLIx2YtBQWjwYA-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Вернуть output_ buffer" vertex="1">
+          <mxGeometry height="60" width="120" x="210" y="1030" as="geometry" />
+        </mxCell>
+        <mxCell id="JvZlV8VLIx2YtBQWjwYA-7" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Конец" vertex="1">
+          <mxGeometry height="50" width="100" x="110" y="1160" as="geometry" />
+        </mxCell>
+        <mxCell id="JvZlV8VLIx2YtBQWjwYA-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Да" vertex="1">
+          <mxGeometry height="30" width="30" x="235" y="840" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="yoz7EJnoRoj_hr_8qKu8" name="Обратное распространение">
+    <mxGraphModel dx="501" dy="387" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="cvrbmoPy-ClN-AcFEstE-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="Начнем с рассмотрения стандартного случая, когда шаг нашего обучения будет заранее задан, тогда все что нам нужно, это просто вычислить градиент. Его мы будем считать, использую знания об итоговой ошибке.&lt;div&gt;Алгоритм действия следующий:&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Для последнего слоя ошибка будет вычислена как СКО умноженное на производную от функции ожидания по входу нейрона&lt;/li&gt;&lt;li&gt;Для последнего слоя градиент будет искаться как умножение ошибки на значения нейронов на прошлом слое&lt;/li&gt;&lt;li&gt;Для последующих слоев ошибка будет вычисляться как произведение транспонированных весов на дельты следующего слоя и на производную от входа текущего слоя&lt;/li&gt;&lt;li&gt;Градиент также считается, как произвдение дельт на транспонированный вход&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="240" width="400" as="geometry" />
+        </mxCell>
+        <mxCell id="KAjg1YjGuJXl7SwGdT7I-4" edge="1" parent="1" source="KAjg1YjGuJXl7SwGdT7I-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KAjg1YjGuJXl7SwGdT7I-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KAjg1YjGuJXl7SwGdT7I-1" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Начало" vertex="1">
+          <mxGeometry height="50" width="100" x="550" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KAjg1YjGuJXl7SwGdT7I-3" edge="1" parent="1" source="KAjg1YjGuJXl7SwGdT7I-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600.3225806451612" y="200.0000000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KAjg1YjGuJXl7SwGdT7I-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="deltas_i = (выход.получ - выход.ожид)" vertex="1">
+          <mxGeometry height="60" width="200" x="500" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="KAjg1YjGuJXl7SwGdT7I-7" edge="1" parent="1" source="KAjg1YjGuJXl7SwGdT7I-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KAjg1YjGuJXl7SwGdT7I-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KAjg1YjGuJXl7SwGdT7I-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="deltas_i = deltas_i * derev_func(revers_func(outputs_))" vertex="1">
+          <mxGeometry height="60" width="200" x="500" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-31" edge="1" parent="1" source="KAjg1YjGuJXl7SwGdT7I-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KAjg1YjGuJXl7SwGdT7I-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="grad_i = deltas_i * prev.outputs_" vertex="1">
+          <mxGeometry height="60" width="200" x="500" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-3" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="iZZzfigOmkZ3rGOErFuc-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="479.7741935483871" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-24" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-2" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Первый слой?" vertex="1">
+          <mxGeometry height="80" width="180" x="510" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-9" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="delta_(i-1) = weights * deltas_(i-1)" vertex="1">
+          <mxGeometry height="60" width="140" x="380" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-7" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="deltas_(i-1) = deltas_i" vertex="1">
+          <mxGeometry height="60" width="200" x="500" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-10" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-13">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="790" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="deltas_(i-1) = deltas_(i-1) * derev_func(revers_func(outputs_))" vertex="1">
+          <mxGeometry height="60" width="200" x="350" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-37" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="grad_(i-1) = deltas_(i-1) * prev.outputs_" vertex="1">
+          <mxGeometry height="60" width="200" x="350" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-17" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="deltas_(i-2) = deltas_(i-1)" vertex="1">
+          <mxGeometry height="60" width="200" x="350" y="940" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-26" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="i = i - 1" vertex="1">
+          <mxGeometry height="60" width="120" x="390" y="1030" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Нет" vertex="1">
+          <mxGeometry height="30" width="60" x="450" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-19" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="delta_(i-1) = weights * deltas_(i-1)" vertex="1">
+          <mxGeometry height="60" width="140" x="640" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-21" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-23">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="750" y="820" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-22" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="deltas_(i-1) = deltas_(i-1) * derev_func(revers_func(outputs_))" vertex="1">
+          <mxGeometry height="60" width="200" x="610" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-35" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="grad_(i-1) = deltas_(i-1) * inputData" vertex="1">
+          <mxGeometry height="60" width="200" x="610" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-25" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Да" vertex="1">
+          <mxGeometry height="30" width="20" x="690" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-27" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Конец" vertex="1">
+          <mxGeometry height="50" width="100" x="550" y="1180" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-32" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#FFFFFF;fillColor=#999999;" value="gradDescent" vertex="1">
+          <mxGeometry height="20" width="150" x="525" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-38" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-33" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#FFFFFF;fillColor=#999999;" value="gradDescent" vertex="1">
+          <mxGeometry height="20" width="150" x="375" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-36" edge="1" parent="1" source="iZZzfigOmkZ3rGOErFuc-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="iZZzfigOmkZ3rGOErFuc-27">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="710" y="1140" />
+              <mxPoint x="600" y="1140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iZZzfigOmkZ3rGOErFuc-34" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#FFFFFF;fillColor=#999999;" value="gradDescent" vertex="1">
+          <mxGeometry height="20" width="150" x="635" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="qsQyNaabiwEfjLqadG7W-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="Теперь рассмотрим алгоритм коррекции весов, основанный на методе отпимизации Adam.&lt;div&gt;Выбор пал на данный метод, тк с точки зрения математики он дает оптимальное решение проблемы оптимизации, а именно:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;благодаря наследованию от моментума, он позволяет работать с не выпуклыми функциями за счет преодоления седел с использованием инерции (текущая корректировка учитывает предыдущую) - это считается первым моментом (мат. стат.)&lt;/li&gt;&lt;li&gt;благодаря наследству от RMSProp Adam предотвращает слишком сильное уменьшение шагов коррекции на основе оценки второго момента (мат. стат.) градиента&lt;/li&gt;&lt;/ul&gt;&lt;div&gt;Опишем алгоритм для Adam:&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Необходимо посчитать скользящее среднее для текущей итерации&lt;/li&gt;&lt;li&gt;По скользящим средним нужно рассчитать коррекционные параметры&lt;/li&gt;&lt;li&gt;После чего необходимо вычислить коррекции весов и произвести коррекцию&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="360" width="400" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="Z_BmexIz_t9pVG_KsKin-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="Заметка для интересующихся&lt;div&gt;Почему именно так будет считаться градиент? Казалось бы мы просто перемножаем ошибки на выходы прошлого слоя и используем только одну производную, что это вообще за зверь?&lt;/div&gt;&lt;div&gt;А ответ очень прост: нам необходимо найти градиент функции потерь (L) по весам (w), т.е. мы ищем dL/dw. А теперь пару хитрых математических шагов:&lt;/div&gt;&lt;div&gt;&lt;ol&gt;&lt;li&gt;Найдем как L зависит от ошибки на выходе нейрона? Это будет просто ошибка (дельта) между тем, что мы ожидали и тем, что получили, тогда введем: dL/da = y_pred - y_true, где a - это выход нейрона после применения функции активации; y_pred - полученый выход&lt;/li&gt;&lt;li&gt;Теперь найдем как выход нейрона зависит от его входа, это не сложно, тк функция активации нам известна, то нам просто нужно найти значение ее производной в этой точке (вход нейрона до активации), тогда получаем: da/dz = f&#39;(f^-1(a)), где a - выход нейрона после активации, z - взвешенная сумма весов (входе нейрона), f^-1 - обратная функция для нахождения входа по выходу&lt;/li&gt;&lt;li&gt;Найдем производную взвешенной суммы по весам, это будет: dz/dw = a_prev, что логично тк z_i = w_i * a_prev_i&lt;/li&gt;&lt;/ol&gt;&lt;div&gt;А теперь главная магия: dL/dw можно выразить как:&lt;/div&gt;&lt;/div&gt;&lt;div&gt;dL/dw = dL/da * da/dz * dz/dw&lt;/div&gt;&lt;div&gt;Вот мы и получили наш градиент, красивая и элегантная&amp;nbsp;&lt;/div&gt;&lt;div&gt;формула.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="400" width="400" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-4" edge="1" parent="1" source="KYg-ZqO2RvvMZBNcUwyW-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KYg-ZqO2RvvMZBNcUwyW-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-1" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Начало" vertex="1">
+          <mxGeometry height="50" width="100" x="550" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-5" edge="1" parent="1" source="KYg-ZqO2RvvMZBNcUwyW-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KYg-ZqO2RvvMZBNcUwyW-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="m = b1 * m + (1 - b1) * grad" vertex="1">
+          <mxGeometry height="60" width="200" x="500" y="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-8" edge="1" parent="1" source="KYg-ZqO2RvvMZBNcUwyW-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KYg-ZqO2RvvMZBNcUwyW-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="v = b2 * v + (1 - b2) * grad^2" vertex="1">
+          <mxGeometry height="60" width="200" x="500" y="1470" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-10" edge="1" parent="1" source="KYg-ZqO2RvvMZBNcUwyW-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KYg-ZqO2RvvMZBNcUwyW-9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="1670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="m_h = m / (1 - b1)" vertex="1">
+          <mxGeometry height="60" width="200" x="500" y="1570" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-13" edge="1" parent="1" source="KYg-ZqO2RvvMZBNcUwyW-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KYg-ZqO2RvvMZBNcUwyW-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="v_h = v / (1 - b1)" vertex="1">
+          <mxGeometry height="60" width="200" x="500" y="1674" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-15" edge="1" parent="1" source="KYg-ZqO2RvvMZBNcUwyW-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="KYg-ZqO2RvvMZBNcUwyW-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="w = w - learnRate * m_h / (sqrt(v_h) + epsilon)" vertex="1">
+          <mxGeometry height="60" width="200" x="500" y="1780" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-14" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Конец" vertex="1">
+          <mxGeometry height="50" width="100" x="550" y="1880" as="geometry" />
+        </mxCell>
+        <mxCell id="KYg-ZqO2RvvMZBNcUwyW-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="Как это работает? Почему мы выбрали именно этот алгоритм?&lt;div&gt;Рассмотрим используемые нами формулы:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;m - можно описать просто как скользящее среднее по всем градиентам, те если прошлые градиены все были около 1, а текущий равен, 0, то по итогу мы получим что-то близкое к 0.98 в зависимости от номера итерации и осатновки коррекции не случилось&lt;/li&gt;&lt;li&gt;v - можно рассматривать как меру величины самого градиента, т.к. в отличие от m, v - беззнаковая&lt;/li&gt;&lt;/ul&gt;&lt;div&gt;Теперь обратим внимание на финальную формулу, ее можно рассмотреть как соотношение сигнал/шум, где m_h - сигнал, sqrt(v_h) - шум. Таким образом мы оптимизируем наше обучение под различные сценарии.&lt;/div&gt;&lt;/div&gt;&lt;div&gt;m_h и v_h вычисляются для коррекции смещенности оценки, т.к. m и v инициализируются нулями, то они будут смещены к ним.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="320" width="400" y="1640" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
