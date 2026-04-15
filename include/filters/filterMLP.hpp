@@ -11,9 +11,9 @@
 #ifndef __FILTER_MLP_HPP
 #define __FILTER_MLP_HPP
 
-#include "lightAI.hpp"
-#include "onlineNormalizer.hpp"
-#include "windowBuffer.hpp"
+#include <core/lightAI.hpp>
+#include <utils/onlineNormalizer.hpp>
+#include <utils/windowBuffer.hpp>
 #include "filter.hpp"
 #include <string>
 #include <cstdint>
