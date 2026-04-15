@@ -157,4 +157,4 @@ inline signalContainer<T>& filterChain<T>::getFilteredSignalReference()
 #include "filterEMF.hpp"
 #include "filterMedian.hpp"
 #include "approximation.hpp"
-
+#include "filterMLP.hpp"
