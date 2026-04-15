@@ -9,6 +9,8 @@ FetchContent_Declare(
     GIT_TAG main
 )
 
+set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+
 FetchContent_MakeAvailable(lightAI)
 
 add_library(filters INTERFACE)
