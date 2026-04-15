@@ -18,6 +18,6 @@ target_include_directories(filters INTERFACE
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(filters INTERFACE lightAI_core)   # или lightAI::core
+target_link_libraries(filters INTERFACE lightAI::core)
 
 target_compile_features(filters INTERFACE cxx_std_17)
