@@ -63,7 +63,7 @@ class filterMLP : public filters::filterBase<T> {
 #endif
 
 template <typename T, int W>
-filterMLP<T,W>::filterMLP(const std::vector<int>& topo,
+inline filterMLP<T,W>::filterMLP(const std::vector<int>& topo,
                            int64_t warmupSteps, double lr0,
                            double lrMin, double decay,
                            const std::string& statePath)
@@ -91,19 +91,19 @@ filterMLP<T,W>::filterMLP(const std::vector<int>& topo,
 }
 
 template <typename T, int W>
-void filterMLP<T,W>::setGnssLabel(T label) {
+inline void filterMLP<T,W>::setGnssLabel(T label) {
     gnssLabel_       = label;
     gnssUpdateReady_ = true;
 }
 
 template <typename T, int W>
-void filterMLP<T,W>::resetBuffer() {
+inline void filterMLP<T,W>::resetBuffer() {
     window_.reset();
     gnssUpdateReady_ = false;
 }
 
 template <typename T, int W>
-void filterMLP<T,W>::applyFilter() {
+inline void filterMLP<T,W>::applyFilter() {
     const std::vector<T>& sig = original_.getSignal();
     if (sig.empty()) { filtered_ = original_; return; }
 
@@ -162,7 +162,7 @@ void filterMLP<T,W>::applyFilter() {
 }
 
 template <typename T, int W>
-bool filterMLP<T,W>::saveState() const {
+inline bool filterMLP<T,W>::saveState() const {
     if (statePath_.empty()) return false;
     if (!net_.saveWeights(statePath_ + ".weights")) return false;
     std::ofstream f(statePath_ + ".norm", std::ios::binary);
@@ -177,7 +177,7 @@ bool filterMLP<T,W>::saveState() const {
 }
 
 template <typename T, int W>
-bool filterMLP<T,W>::loadState() {
+inline bool filterMLP<T,W>::loadState() {
     if (statePath_.empty()) return false;
     if (!net_.loadWeights(statePath_ + ".weights")) return false;
     std::ifstream f(statePath_ + ".norm", std::ios::binary);
