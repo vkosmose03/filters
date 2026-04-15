@@ -1,8 +1,8 @@
 /*
-    * filterMAF.hpp
+    * filterMLP.hpp
     *
     * This file is part of the filters library.
-    * It defines the filterMAF class for applying Moving Average Filters.
+    * It defines the filterMLP class for applying Moving Average Filters.
     *
     * Author: Vitaly Makarov
     * Date: 2026-03-04
@@ -18,6 +18,8 @@
 #include <string>
 #include <cstdint>
 #include <fstream>
+#include <vector>
+#include <Eigen/Dense>
 
 namespace lightAI::core {
 
@@ -60,10 +62,15 @@ class filterMLP : public filters::filterBase<T> {
     std::fstream corrValF;
 };
 
-#endif
+extern template class filterMLP<double, 5>;
+extern template class filterMLP<double, 8>;
+
+} // namespace lightAI::core
+
+namespace lightAI::core {
 
 template <typename T, int W>
-inline filterMLP<T,W>::filterMLP(const std::vector<int>& topo,
+filterMLP<T,W>::filterMLP(const std::vector<int>& topo,
                            int64_t warmupSteps, double lr0,
                            double lrMin, double decay,
                            const std::string& statePath)
@@ -91,19 +98,19 @@ inline filterMLP<T,W>::filterMLP(const std::vector<int>& topo,
 }
 
 template <typename T, int W>
-inline void filterMLP<T,W>::setGnssLabel(T label) {
+void filterMLP<T,W>::setGnssLabel(T label) {
     gnssLabel_       = label;
     gnssUpdateReady_ = true;
 }
 
 template <typename T, int W>
-inline void filterMLP<T,W>::resetBuffer() {
+void filterMLP<T,W>::resetBuffer() {
     window_.reset();
     gnssUpdateReady_ = false;
 }
 
 template <typename T, int W>
-inline void filterMLP<T,W>::applyFilter() {
+void filterMLP<T,W>::applyFilter() {
     const std::vector<T>& sig = original_.getSignal();
     if (sig.empty()) { filtered_ = original_; return; }
 
@@ -140,13 +147,11 @@ inline void filterMLP<T,W>::applyFilter() {
     Eigen::VectorXd corrNorm = net_.tick(xn);
     double corrVal = corrNorm(0) * stdDev + mean;
 
-    // В фазе прогрева сигнал не модифицируем
     std::vector<T> outSig = sig;
     if (trainCount_ >= warmupSteps_ && !std::isnan(corrVal))
         outSig.back() = rawVal - static_cast<T>(corrVal);
     filtered_.setSignal(outSig);
 
-    // Обучающий шаг
     if (gnssUpdateReady_) {
         double labelD = static_cast<double>(gnssLabel_);
         normOut_.update(labelD);
@@ -162,7 +167,7 @@ inline void filterMLP<T,W>::applyFilter() {
 }
 
 template <typename T, int W>
-inline bool filterMLP<T,W>::saveState() const {
+bool filterMLP<T,W>::saveState() const {
     if (statePath_.empty()) return false;
     if (!net_.saveWeights(statePath_ + ".weights")) return false;
     std::ofstream f(statePath_ + ".norm", std::ios::binary);
@@ -177,7 +182,7 @@ inline bool filterMLP<T,W>::saveState() const {
 }
 
 template <typename T, int W>
-inline bool filterMLP<T,W>::loadState() {
+bool filterMLP<T,W>::loadState() {
     if (statePath_.empty()) return false;
     if (!net_.loadWeights(statePath_ + ".weights")) return false;
     std::ifstream f(statePath_ + ".norm", std::ios::binary);
@@ -191,6 +196,6 @@ inline bool filterMLP<T,W>::loadState() {
     return f.good();
 }
 
-template class filterMLP<double, 5>;
-template class filterMLP<double, 8>;
 } // namespace lightAI::core
+
+#endif // __FILTER_MLP_HPP

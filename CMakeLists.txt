@@ -13,13 +13,17 @@ set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(lightAI)
 
-add_library(filters INTERFACE)
+add_library(filters STATIC 
+    src/filterMLP_inst.cpp
+)
 
-target_include_directories(filters INTERFACE
+set_target_properties(filters PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+target_include_directories(filters PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(filters INTERFACE lightAI::core)
+target_link_libraries(filters PUBLIC lightAI::core)
 
-target_compile_features(filters INTERFACE cxx_std_17)
+target_compile_features(filters PUBLIC cxx_std_17)
