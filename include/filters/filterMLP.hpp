@@ -161,11 +161,11 @@ void filterMLP<T,W>::applyFilter() {
     #endif
 
     if (trainCount_ >= warmupSteps_ && !std::isnan(corrVal))
-        outSig.back() = static_cast<T>(corrVal);
+        outSig.back() = rawVal - static_cast<T>(corrVal);
     filtered_.setSignal(outSig);
 
     if (gnssUpdateReady_) {
-        double labelD = static_cast<double>(gnssLabel_);
+        double labelD = static_cast<double>(rawVal - gnssLabel_);
         normOut_.update(labelD);
         double labelNorm = normOut_.normalize(labelD);
         Eigen::VectorXd target(1);
