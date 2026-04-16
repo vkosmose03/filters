@@ -149,7 +149,7 @@ void filterMLP<T,W>::applyFilter() {
 
     std::vector<T> outSig = sig;
     if (trainCount_ >= warmupSteps_ && !std::isnan(corrVal))
-        outSig.back() = rawVal - static_cast<T>(corrVal);
+        outSig.back() = static_cast<T>(corrVal);
     filtered_.setSignal(outSig);
 
     if (gnssUpdateReady_) {
