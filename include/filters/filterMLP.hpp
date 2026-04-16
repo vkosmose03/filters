@@ -59,7 +59,10 @@ class filterMLP : public filters::filterBase<T> {
     int64_t warmupSteps_;
     int64_t trainCount_ = 0;
     std::string statePath_;
-    std::fstream corrValF;
+
+    #ifdef _FILTER_MLP_DBG 
+        std::fstream corrValF;
+    #endif
 };
 
 extern template class filterMLP<double, 5>;
@@ -95,6 +98,10 @@ filterMLP<T,W>::filterMLP(const std::vector<int>& topo,
     , statePath_(statePath)
 {
     if (!statePath_.empty()) loadState();
+
+    #ifdef _FILTER_MLP_DBG
+        corrValF.open("MLP_out,log", std::ios_base::out);
+    #endif
 }
 
 template <typename T, int W>
@@ -148,6 +155,11 @@ void filterMLP<T,W>::applyFilter() {
     double corrVal = corrNorm(0) * stdDev + mean;
 
     std::vector<T> outSig = sig;
+    
+    #ifdef _FILTER_MLP_DBG
+        corrValF << "Raw: " << rawVal << ",   label: " << gnssLabel_ << ",   out: " << corrVal << std::endl;
+    #endif
+
     if (trainCount_ >= warmupSteps_ && !std::isnan(corrVal))
         outSig.back() = static_cast<T>(corrVal);
     filtered_.setSignal(outSig);
