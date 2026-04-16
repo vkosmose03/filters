@@ -92,6 +92,16 @@ inline void filterChain<T>::appendFilter(std::unique_ptr<filterBase<T>>& filter)
 
 
 template <typename T>
+inline std::unique_ptr<filterBase<T>>& filterChain<T>::operator[](size_t index)
+{
+    if (index >= filters_.size())
+        throw std::out_of_range("filterChain::operator[] index out of range");
+    return filters_[index];
+}
+
+
+
+template <typename T>
 inline void filterChain<T>::clearFilters()
 {
     this->filters_.clear();
