@@ -167,7 +167,7 @@ void filterMLP<T,W>::applyFilter() {
     if (gnssUpdateReady_) {
         double labelD = static_cast<double>(gnssLabel_);
         normOut_.update(labelD);
-        double labelNorm = (labelD - mean) / stdDev;
+        double labelNorm = normOut_.normalize(labelD);
         Eigen::VectorXd target(1);
         target(0) = labelNorm;
         net_.learnStep(xn, target);
