@@ -135,7 +135,7 @@ void filterMLP<T,W>::applyFilter() {
     Eigen::VectorXd x = window_.buildEigenVector();
     Eigen::VectorXd xn(x.size());
 
-    double mean = normIn_.norm(),
+    double mean = normIn_.mean(),
            stdDev = normIn_.stddev();
 
     for (int i = 0; i < x.size(); ++i) {
