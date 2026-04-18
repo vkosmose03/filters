@@ -67,6 +67,7 @@ class filterMLP : public filters::filterBase<T> {
 
 extern template class filterMLP<double, 5>;
 extern template class filterMLP<double, 8>;
+extern template class filterMLP<double, 32>;
 
 } // namespace lightAI::core
 
@@ -134,22 +135,12 @@ void filterMLP<T,W>::applyFilter() {
     Eigen::VectorXd x = window_.buildEigenVector();
     Eigen::VectorXd xn(x.size());
 
-    double mean = 0.0,
-           stdDev = 0.0;
-    for (int i = 0; i < x.size(); ++i) {
-        mean += x(i);
-    }
-    mean /= x.size();
-    
-    for (int i = 0; i < x.size(); ++i) {
-        stdDev += (x(i) - mean) * (x(i) - mean);
-    }
+    double mean = normIn_.norm(),
+           stdDev = normIn_.stddev();
 
-    stdDev = std::sqrt(stdDev / x.size());
-    
     for (int i = 0; i < x.size(); ++i) {
         xn(i) = (x(i) - mean) / stdDev;
-    }   
+    }
 
     Eigen::VectorXd corrNorm = net_.tick(xn);
     double corrVal = corrNorm(0) * stdDev + mean;
