@@ -67,6 +67,7 @@ class filterMLP : public filters::filterBase<T> {
 
 extern template class filterMLP<double, 5>;
 extern template class filterMLP<double, 8>;
+extern template class filterMLP<double, 16>;
 extern template class filterMLP<double, 32>;
 
 } // namespace lightAI::core
