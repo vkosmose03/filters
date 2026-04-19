@@ -102,7 +102,7 @@ filterMLP<T,W>::filterMLP(const std::vector<int>& topo,
     if (!statePath_.empty()) loadState();
 
     #ifdef _FILTER_MLP_DBG
-        corrValF.open("MLP_out,log", std::ios_base::out);
+        corrValF.open("MLP_out.log", std::ios_base::out);
     #endif
 }
 
