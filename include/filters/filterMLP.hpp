@@ -42,6 +42,7 @@ class filterMLP : public filters::filterBase<T> {
     std::vector<T> getSignal() const override { return filtered_.getSignal(); };
 
     void setGnssLabel(T label);
+    bool isWarmup() { return trainCount_ >= (warmupSteps_ + 5) ? true : false; }
 
     void resetBuffer();
     bool saveState() const;
