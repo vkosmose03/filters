@@ -157,7 +157,7 @@ void filterSeq2Seq<T, W>::applyFilter() {
     #ifdef _FILTER_SEQ2SEQ_DBG
         corrValF << "Raw: " << xn << ",    label: ";
         for (T v : gnssLabelWindow_) {
-            corrValF << gnssLabelWindow_ << " ";
+            corrValF << v << " ";
         }    
         corrValF << ",    out: " << corrVal << std::endl;
     #endif
