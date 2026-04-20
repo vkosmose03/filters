@@ -59,6 +59,10 @@ private:
     int64_t warmupSteps_;
     int64_t trainCount_ = 0;
     std::string statePath_;
+
+    #ifdef _FILTER_MLP_DBG 
+        std::fstream corrValF;
+    #endif
 };
 
 extern template class filterSeq2Seq<double, 5>;
@@ -98,6 +102,11 @@ filterSeq2Seq<T, W>::filterSeq2Seq(const std::vector<int>& topo,
     , statePath_(statePath)
 {
     if (!statePath_.empty()) loadState();
+
+    #ifdef _FILTER_SEQ2SEQ_DBG
+        corrValF.open("SEQ2SEQ_out.log", std::ios_base::out);
+    #endif
+
 }
 
 template <typename T, int W>
@@ -144,6 +153,10 @@ void filterSeq2Seq<T, W>::applyFilter() {
     if (trainCount_ >= warmupSteps_ && !std::isnan(corrVal(W - 1)))
         outSig.back() = rawVal - static_cast<T>(corrVal(W - 1));
     filtered_.setSignal(outSig);
+
+    #ifdef _FILTER_SEQ2SEQ_DBG
+        corrValF << "Raw: " << xn << ",    label: " << gnssLabelWindow_ << ",    out: " << corrVal << std::endl;
+    #endif
 
     if (gnssUpdateReady_ && static_cast<int>(gnssLabelWindow_.size()) >= W) {
         std::vector<double> labels(W);
