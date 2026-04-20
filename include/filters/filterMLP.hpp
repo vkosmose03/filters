@@ -2,7 +2,7 @@
     * filterMLP.hpp
     *
     * This file is part of the filters library.
-    * It defines the filterMLP class for applying Moving Average Filters.
+    * It defines the filterMLP class for applying AI sequence to value filtering.
     *
     * Author: Vitaly Makarov
     * Date: 2026-03-04

@@ -15,6 +15,7 @@ FetchContent_MakeAvailable(lightAI)
 
 add_library(filters STATIC 
     src/filterMLP_inst.cpp
+    src/filterSeq2Seq_inst.cpp
 )
 
 set_target_properties(filters PROPERTIES POSITION_INDEPENDENT_CODE ON)
