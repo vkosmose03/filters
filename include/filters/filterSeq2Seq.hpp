@@ -61,10 +61,10 @@ private:
     std::string statePath_;
 };
 
-extern template class filterMLP<double, 5>;
-extern template class filterMLP<double, 8>;
-extern template class filterMLP<double, 16>;
-extern template class filterMLP<double, 32>;
+extern template class filterSeq2Seq<double, 5>;
+extern template class filterSeq2Seq<double, 8>;
+extern template class filterSeq2Seq<double, 16>;
+extern template class filterSeq2Seq<double, 32>;
 
 
 template <typename T, int W>

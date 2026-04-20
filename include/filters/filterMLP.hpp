@@ -71,10 +71,6 @@ extern template class filterMLP<double, 8>;
 extern template class filterMLP<double, 16>;
 extern template class filterMLP<double, 32>;
 
-} // namespace lightAI::core
-
-namespace lightAI::core {
-
 template <typename T, int W>
 filterMLP<T,W>::filterMLP(const std::vector<int>& topo,
                            int64_t warmupSteps, double lr0,
