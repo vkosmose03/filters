@@ -138,7 +138,7 @@ void filterSeq2Seq<T, W>::applyFilter() {
     for (int i = 0; i < W; ++i) xn(i) = (x(i) - mean) / stdDev;
 
     Eigen::VectorXd corrNorm = net_.tick(xn);
-    Eigen::VectorXd corrVal = corrNorm * stdDev + mean;
+    Eigen::VectorXd corrVal = (corrNorm.array() * stdDev + mean).matrix();
 
     std::vector<T> outSig = sig;
     if (trainCount_ >= warmupSteps_ && !std::isnan(corrVal(W - 1)))
