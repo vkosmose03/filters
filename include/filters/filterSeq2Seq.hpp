@@ -151,7 +151,7 @@ void filterSeq2Seq<T, W>::applyFilter() {
 
     std::vector<T> outSig = sig;
     if (trainCount_ >= warmupSteps_ && !std::isnan(corrVal(W - 1)))
-        outSig.back() = rawVal - static_cast<T>(corrVal(W - 1));
+        outSig.back() = static_cast<T>(corrVal(W - 1));
     filtered_.setSignal(outSig);
 
     #ifdef _FILTER_SEQ2SEQ_DBG
