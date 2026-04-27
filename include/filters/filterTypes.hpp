@@ -109,4 +109,22 @@ struct HAARfilterSettings
     int filteringWindow;
     int depth;
 };
+
+
+
+/**
+ * @brief This struct use to set parameters to Kalman filter.
+ * 
+ * @memberof processNoise - Process noise covariance (Q).
+ * @memberof measurementNoise - Measurement noise covariance (R).
+ * @memberof estimationError - Initial estimation error covariance (P).
+ */
+struct KalmanSettings
+{
+    double processNoise;
+    double measurementNoise;
+    double estimationError;
+};
+
+// ... конец namespace filters
 }// namespace filters

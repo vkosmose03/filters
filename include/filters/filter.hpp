@@ -169,3 +169,4 @@ inline signalContainer<T>& filterChain<T>::getFilteredSignalReference()
 #include "approximation.hpp"
 #include "filterMLP.hpp"
 #include "filterSeq2Seq.hpp"
+#include "filterKalman.hpp"
