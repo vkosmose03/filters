@@ -141,12 +141,14 @@ void filterSeq2Seq<T, W>::applyFilter() {
     Eigen::VectorXd x(W);
     for (int i = 0; i < W; ++i) x(i) = imuWindow_[i](0);
 
-    double mean = normOut_.mean();
-    double stdDev = normOut_.stddev();
+    double mean = normIn_.mean();
+    double stdDev = normIn_.stddev();
     Eigen::VectorXd xn(W);
     for (int i = 0; i < W; ++i) xn(i) = (x(i) - mean) / stdDev;
 
     Eigen::VectorXd corrNorm = net_.tick(xn);
+    mean = normOut_.mean();
+    stdDev = normOut_.stddev();
     Eigen::VectorXd corrVal = (corrNorm.array() * stdDev + mean).matrix();
 
     std::vector<T> outSig = sig;
