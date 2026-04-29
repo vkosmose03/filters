@@ -48,6 +48,16 @@ enum class LinearizationType
 
 
 
+enum class  ButterworthType
+{
+    LOW_PASS = 1,
+    HIGH_PASS = 2,
+    BAND_PASS = 3,
+    BAND_STOP = 4
+};
+
+
+
 /**
  * @brief This struct use to set parametrs to approximation filter.
  * 
@@ -126,5 +136,20 @@ struct KalmanSettings
     double estimationError;
 };
 
-// ... конец namespace filters
+
+/**
+ * @brief This struct use to set parameters to Butterworth filter.
+ * 
+ * @memberof order - is the order of the filter.
+ * @memberof cutoffFreq - is the cutoff frequency (Hz).
+ * @memberof sampleRate - is the sampling frequency (Hz).
+ * @memberof type - is the type of filter (e.g., LOW_PASS, HIGH_PASS).
+ */
+struct ButterworthSettings
+{
+    int order;
+    double cutoffFreq;
+    double sampleRate;
+    FilterType type;
+};
 }// namespace filters
