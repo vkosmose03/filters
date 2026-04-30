@@ -48,7 +48,7 @@ enum class LinearizationType
 
 
 
-enum class  ButterworthType
+enum class ButterworthType
 {
     LOW_PASS = 1,
     HIGH_PASS = 2,
@@ -150,6 +150,6 @@ struct ButterworthSettings
     int order;
     double cutoffFreq;
     double sampleRate;
-    FilterType type;
+    ButterworthType type;
 };
 }// namespace filters
