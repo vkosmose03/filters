@@ -170,3 +170,4 @@ inline signalContainer<T>& filterChain<T>::getFilteredSignalReference()
 #include "filterMLP.hpp"
 #include "filterSeq2Seq.hpp"
 #include "filterKalman.hpp"
+#include "filterButterworth.hpp"
